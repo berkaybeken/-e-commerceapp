@@ -1,4 +1,3 @@
-// app/products/[id]/page.jsx
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import AddToCart from './AddToCart';
