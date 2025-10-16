@@ -4,12 +4,11 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'default-no-store';
 
+const BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://fakestoreapi.com').replace(/\/$/, '');
+
 async function getProducts() {
-  const base = process.env.NEXT_PUBLIC_API_BASE;
-  if (!base) return [];
-  const url = `${base.replace(/\/$/, '')}/products`;
   try {
-    const r = await fetch(url, { cache: 'no-store' });
+    const r = await fetch(`${BASE}/products`, { cache: 'no-store' });
     if (!r.ok) return [];
     return await r.json();
   } catch {

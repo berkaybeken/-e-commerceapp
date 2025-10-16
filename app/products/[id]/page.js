@@ -1,3 +1,4 @@
+// app/products/[id]/page.jsx
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import AddToCart from './AddToCart';
@@ -6,12 +7,11 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'default-no-store';
 
+const BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://fakestoreapi.com').replace(/\/$/, '');
+
 async function getProduct(id) {
-  const base = process.env.NEXT_PUBLIC_API_BASE;
-  if (!base) return null;
-  const url = `${base.replace(/\/$/, '')}/products/${id}`;
   try {
-    const r = await fetch(url, { cache: 'no-store' });
+    const r = await fetch(`${BASE}/products/${id}`, { cache: 'no-store' });
     if (!r.ok) return null;
     return await r.json();
   } catch {
