@@ -1,14 +1,27 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { api } from '../../../lib/api';
-import { sleep } from '../../../lib/sleep';
 import AddToCart from './AddToCart';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'default-no-store';
+
+async function getProduct(id) {
+  const base = process.env.NEXT_PUBLIC_API_BASE;
+  if (!base) return null;
+  const url = `${base.replace(/\/$/, '')}/products/${id}`;
+  try {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch {
+    return null;
+  }
+}
 
 export default async function ProductDetail({ params }) {
   const { id } = await params;
-  await sleep(300);
-
-  const { data: p } = await api.get(`/products/${id}`).catch(() => ({ data: null }));
+  const p = await getProduct(id);
   if (!p?.id) notFound();
 
   return (
