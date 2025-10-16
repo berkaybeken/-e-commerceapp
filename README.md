@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E Commerce
 
-## Getting Started
+A simple, user‑friendly e‑commerce demo built with **Next.js 15 (App Router)**, **React (JS)**, **Tailwind**, **Axios**, and **json-server**.
 
-First, run the development server:
+## Run Locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+
+# Create .env.local in the project root:
+# NEXT_PUBLIC_API_BASE=http://localhost:4001
+
+npm run seed       # populates products (fetches from FakeStore API)
+npm run dev:all    # runs Next.js + json-server together
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- App: **http://localhost:3000**
+- API: **http://localhost:4001**
+- Demo user: **demo@mobiversite.com** / **123456**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Design Decisions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **User‑friendly, web‑first UX:** Desktop layouts are prioritized; the UI is fully responsive and works cleanly across mobile screen sizes.
+- **json-server for API:** Lightweight fake REST to keep focus on the frontend; no separate backend setup needed.
+- **Themes & i18n:** Light/Dark/System theme support and TR/EN dictionaries for a realistic feel.
+- **State model:** React Context + localStorage for cart and wishlist persistence.
+- **App Router structure:** Lists/details as Server Components where possible; interactive parts (cart, modals, toggles) as Client Components.
 
-## Learn More
+## Implementation Summary
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Authentication:** `/api/login`, `/api/logout`, and `/api/session` manage a cookie‑based session. The header listens for session changes.
+- **State management:** `CartContext` and `WishlistContext` provide add/remove/quantity/update helpers; totals are derived and persisted in localStorage.
+- **API communication:** Axios instance (`lib/api.js`) talks to json-server routes: `GET /products`, `GET /products/:id`, `POST /orders`, `GET /orders?userId=...`, `GET /users?email=&password=`.
+- **Checkout flow:** `/cart` → login inline modal if needed → confirmation modal → `/profile?checkout=1`.
